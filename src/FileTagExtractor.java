@@ -4,11 +4,11 @@ public class FileTagExtractor
     {
         TagDisplayFrame frame = new TagDisplayFrame();
 
-//        // Create a new instance of the FileReader class
-//        FileReader fileReader = new FileReader();
+//        // Create a new instance of the FileSaver class
+//        FileSaver fileSaver = new FileSaver();
 //
 //        // Read the file and get the tags
-//        String[] tags = fileReader.readFile("path/to/your/file.txt");
+//        String[] tags = fileSaver.readFile("path/to/your/file.txt");
 //
 //        // Create a new instance of the TagDisplay class
 //        TagDisplay tagDisplay = new TagDisplay();

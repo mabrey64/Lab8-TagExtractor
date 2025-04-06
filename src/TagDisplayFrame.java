@@ -114,4 +114,10 @@ public class TagDisplayFrame extends JFrame
             tagDisplayArea.setText("File selection failed.");
         }
     }
+
+    public void createTagFrequency() {
+        String selectedFileName = selectedFileLabel.getText();
+        String filterFileName = selectedTrapFileLabel.getText();
+        TagFrequency tagFrequency = new TagFrequency(selectedFileName, filterFileName);
+    }
 }

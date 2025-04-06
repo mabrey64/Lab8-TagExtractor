@@ -1,2 +1,4 @@
-public class TagFrequency {
+public class TagFrequency
+{
+
 }

@@ -11,11 +11,13 @@ public class TagDisplayFrame extends JFrame
     JPanel buttonPanel; // Panel for the buttons
 
     JLabel selectedFileLabel; // Label to display the selected file
+    JLabel selectedTrapFileLabel; // Label to display the selected trap word file
 
     JFileChooser fileChooser; // File chooser for selecting files
     File selectedFile; // The file selected by the user
 
     JButton chooseFileButton; // Button to choose a file
+    JButton chooseStopFileButton; // Button to choose a stop file
     JButton tagExtractButton; // Button to display the tag frequencies
     JButton saveButton; // Button to save the tag frequencies to a file
     JButton exitButton; // Button to exit the program
@@ -39,7 +41,9 @@ public class TagDisplayFrame extends JFrame
         // Initialize the tag panel and add components to it
         tagPanel = new JPanel();
         selectedFileLabel = new JLabel("Currently selected file: None");
+        selectedTrapFileLabel = new JLabel("Currently selected trap word file: None");
         tagPanel.add(selectedFileLabel);
+        tagPanel.add(selectedTrapFileLabel);
 
         buttonPanel();
 
@@ -68,26 +72,24 @@ public class TagDisplayFrame extends JFrame
         buttonPanel.setLayout(new FlowLayout());
 
         chooseFileButton = new JButton("Choose File");
+        chooseStopFileButton = new JButton("Choose Stop File");
         tagExtractButton = new JButton("Extract Tags");
         saveButton = new JButton("Save Tags");
         exitButton = new JButton("Exit");
 
         // Add buttons to the button panel
         buttonPanel.add(chooseFileButton);
+        buttonPanel.add(chooseStopFileButton);
         buttonPanel.add(tagExtractButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(exitButton);
 
         // Add action listeners to the buttons
         chooseFileButton.addActionListener(e -> {
-            int returnValue = fileChooser.showOpenDialog(this);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                selectedFile = fileChooser.getSelectedFile();
-                selectedFileLabel.setText("Selected file: " + selectedFile.getName());
-                tagDisplayArea.setText("File successfully loaded.");
-            } else {
-                tagDisplayArea.setText("File selection failed.");
-            }
+            choosefileAction();
+        });
+        chooseStopFileButton.addActionListener(e -> {
+            choosefileAction();
         });
 
         exitButton.addActionListener(e -> {
@@ -97,6 +99,19 @@ public class TagDisplayFrame extends JFrame
             }
         });
 
+
         mainTagPanel.add(buttonPanel);
+    }
+
+    private void choosefileAction()
+    {
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selectedFile = fileChooser.getSelectedFile();
+            selectedFileLabel.setText("Selected file: " + selectedFile.getName());
+            tagDisplayArea.setText("File successfully loaded.");
+        } else {
+            tagDisplayArea.setText("File selection failed.");
+        }
     }
 }

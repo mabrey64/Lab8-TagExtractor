@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.io.File;
 import java.awt.*;
 import java.nio.file.Path;
+import java.util.Map;
 
 public class TagDisplayFrame extends JFrame
 {
@@ -92,6 +93,15 @@ public class TagDisplayFrame extends JFrame
             choosefileAction();
         });
 
+        tagExtractButton.addActionListener(e -> {
+            if (selectedFile != null) {
+                createTagFrequency();
+            } else {
+                tagDisplayArea.setText("Please select a file first.");
+            }
+            displayTagFrequency(new TagFrequency(selectedFileLabel.getText(), selectedTrapFileLabel.getText()));
+        });
+
         exitButton.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
@@ -119,5 +129,13 @@ public class TagDisplayFrame extends JFrame
         String selectedFileName = selectedFileLabel.getText();
         String filterFileName = selectedTrapFileLabel.getText();
         TagFrequency tagFrequency = new TagFrequency(selectedFileName, filterFileName);
+    }
+    public void displayTagFrequency(TagFrequency tagFrequency) {
+        StringBuilder tagFrequencyDisplay = new StringBuilder();
+        Map <String, Integer> tagFrequencyMap = tagFrequency.calculateTagFrequency();
+        for (Map.Entry<String, Integer> entry : tagFrequencyMap.entrySet()) {
+            tagFrequencyDisplay.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        tagDisplayArea.setText(tagFrequencyDisplay.toString());
     }
 }

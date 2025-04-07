@@ -90,7 +90,7 @@ public class TagDisplayFrame extends JFrame
             choosefileAction();
         });
         chooseStopFileButton.addActionListener(e -> {
-            choosefileAction();
+            chooseTrapFileAction();
         });
 
         tagExtractButton.addActionListener(e -> {
@@ -100,6 +100,16 @@ public class TagDisplayFrame extends JFrame
                 tagDisplayArea.setText("Please select a file first.");
             }
             displayTagFrequency(new TagFrequency(selectedFileLabel.getText(), selectedTrapFileLabel.getText()));
+        });
+
+        saveButton.addActionListener(e -> {
+            if (selectedFile != null) {
+                FileSaver fileSaver = new FileSaver(selectedFile);
+                fileSaver.saveTags(tagDisplayArea.getText());
+                tagDisplayArea.setText("Tags saved successfully.");
+            } else {
+                tagDisplayArea.setText("Please select a file first.");
+            }
         });
 
         exitButton.addActionListener(e -> {
@@ -125,17 +135,44 @@ public class TagDisplayFrame extends JFrame
         }
     }
 
+    private void chooseTrapFileAction()
+    {
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedTrapFile = fileChooser.getSelectedFile();
+            selectedTrapFileLabel.setText("Selected trap word file: " + selectedTrapFile.getName());
+            tagDisplayArea.setText("File successfully loaded.");
+        } else {
+            tagDisplayArea.setText("File selection failed.");
+        }
+    }
+
     public void createTagFrequency() {
-        String selectedFileName = selectedFileLabel.getText();
-        String filterFileName = selectedTrapFileLabel.getText();
+        try {
+        String selectedFileName = selectedFile.getAbsolutePath();
+        String filterFileName = selectedTrapFileLabel.getText().replace("Selected trap word file: ", "");
         TagFrequency tagFrequency = new TagFrequency(selectedFileName, filterFileName);
+        displayTagFrequency(tagFrequency);
+        } catch (Exception e) {
+            tagDisplayArea.setText("Error creating tag frequency: " + e.getMessage());
+        }
     }
     public void displayTagFrequency(TagFrequency tagFrequency) {
+        try {
         StringBuilder tagFrequencyDisplay = new StringBuilder();
         Map <String, Integer> tagFrequencyMap = tagFrequency.calculateTagFrequency();
         for (Map.Entry<String, Integer> entry : tagFrequencyMap.entrySet()) {
             tagFrequencyDisplay.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
-        tagDisplayArea.setText(tagFrequencyDisplay.toString());
+        SwingUtilities.invokeLater( () -> tagDisplayArea.setText(tagFrequencyDisplay.toString()));
+    } catch (Exception e)
+        {
+        tagDisplayArea.setText("Error displaying tag frequency: " + e.getMessage());
+    }
+    }
+
+    public String returnFileName()
+    {
+        return selectedFileLabel.getText() + ";" + selectedTrapFileLabel.getText();
     }
 }

@@ -19,7 +19,7 @@ public class TagFrequency
     }
 
     public Map<String, Integer> calculateTagFrequency() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.selectedFile))) {
             String record;
             // Implement the logic to read the selected file and calculate tag frequency
             // Store the results in the tagFrequencyMap
@@ -36,6 +36,7 @@ public class TagFrequency
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("Reached end of calculateTagFrequency method");
         return tagFrequencyMap;
     }
 }

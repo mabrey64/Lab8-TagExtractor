@@ -3,7 +3,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class TagFrequency
 {
@@ -15,7 +17,7 @@ public class TagFrequency
     {
         this.selectedFile = new File(selectedFilePath);
         this.filterFile = new File(filterFilePath);
-        this.tagFrequencyMap = new HashMap<>();
+        this.tagFrequencyMap = new TreeMap<>();
     }
 
     public Map<String, Integer> calculateTagFrequency() {
@@ -25,6 +27,7 @@ public class TagFrequency
             // Store the results in the tagFrequencyMap
             while ((record = reader.readLine()) != null) {
                 for (String word : record.split("\\s+")) {
+                    word = word.toLowerCase().replaceAll("[^a-zA-Z\\s]", "");
                     // Check if the word is a tag and update the frequency in the map
                     if (tagFrequencyMap.containsKey(word)) {
                         tagFrequencyMap.put(word, tagFrequencyMap.get(word) + 1);

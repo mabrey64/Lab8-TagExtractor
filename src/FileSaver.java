@@ -5,18 +5,16 @@ import java.io.IOException;
 
 public class FileSaver
 {
-    private File selectedFile;
-    private String filePath;
+    private File saveFile;
 
-    public FileSaver(File selectedFile)
+    public FileSaver(File saveFile)
     {
-        this.selectedFile = selectedFile;
-        this.filePath = selectedFile.getAbsolutePath();
+        this.saveFile = saveFile;
     }
 
     public void saveTags(String tags)
     {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath)))
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile)))
         {
             writer.write(tags);
         }

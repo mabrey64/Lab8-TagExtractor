@@ -103,12 +103,20 @@ public class TagDisplayFrame extends JFrame
         });
 
         saveButton.addActionListener(e -> {
-            if (selectedFile != null) {
-                FileSaver fileSaver = new FileSaver(selectedFile);
-                fileSaver.saveTags(tagDisplayArea.getText());
-                tagDisplayArea.setText("Tags saved successfully.");
+            JFileChooser saveFileChooser = new JFileChooser();
+            saveFileChooser.setDialogTitle("Specify a file to save");
+            int userSelection = saveFileChooser.showSaveDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                selectedFile = saveFileChooser.getSelectedFile();
+                try {
+                    FileSaver fileSaver = new FileSaver(selectedFile);
+                    fileSaver.saveTags(tagDisplayArea.getText());
+                    tagDisplayArea.setText("Tags saved to: " + selectedFile.getAbsolutePath());
+                } catch (Exception ex) {
+                    tagDisplayArea.setText("Error saving tags: " + ex.getMessage());
+                }
             } else {
-                tagDisplayArea.setText("Please select a file first.");
+                tagDisplayArea.setText("Save operation cancelled.");
             }
         });
 

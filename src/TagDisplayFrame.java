@@ -4,6 +4,12 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.Map;
 
+/**
+ * TagDisplayFrame is a GUI class that provides a user interface for selecting files,
+ * displaying tag frequencies, and saving the results.
+ * It uses Swing components to create a user-friendly interface.
+ * The class handles user interactions and updates the display accordingly.
+ */
 public class TagDisplayFrame extends JFrame
 {
     JPanel mainTagPanel; // Main panel for the overall layout
@@ -24,6 +30,9 @@ public class TagDisplayFrame extends JFrame
     JButton exitButton; // Button to exit the program
 
     JTextArea tagDisplayArea; // Text area for displaying the tag frequencies
+
+    String selectedFilePath = null;
+    String trapFilePath = null;
 
     public TagDisplayFrame()
     {
@@ -72,6 +81,7 @@ public class TagDisplayFrame extends JFrame
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
+        // Initialize buttons and set their properties
         chooseFileButton = new JButton("Choose File");
         chooseStopFileButton = new JButton("Choose Stop File");
         tagExtractButton = new JButton("Extract Tags");
@@ -93,6 +103,7 @@ public class TagDisplayFrame extends JFrame
             chooseTrapFileAction();
         });
 
+        // Add action listeners to the buttons
         tagExtractButton.addActionListener(e -> {
             if (selectedFile != null) {
                 createTagFrequency();
@@ -102,6 +113,7 @@ public class TagDisplayFrame extends JFrame
             displayTagFrequency(new TagFrequency(selectedFileLabel.getText(), selectedTrapFileLabel.getText()));
         });
 
+        // Save button action listener
         saveButton.addActionListener(e -> {
             JFileChooser saveFileChooser = new JFileChooser();
             saveFileChooser.setDialogTitle("Specify a file to save");
@@ -120,6 +132,7 @@ public class TagDisplayFrame extends JFrame
             }
         });
 
+        // Exit button action listener
         exitButton.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
@@ -131,40 +144,48 @@ public class TagDisplayFrame extends JFrame
         mainTagPanel.add(buttonPanel);
     }
 
+    // Action method for choosing a file
     private void choosefileAction()
     {
         int returnValue = fileChooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             selectedFile = fileChooser.getSelectedFile();
-            selectedFileLabel.setText("Selected file: " + selectedFile.getName());
+            selectedFilePath = selectedFile.getAbsolutePath();
+            selectedFileLabel.setText(selectedFile.getName());
             tagDisplayArea.setText("File successfully loaded.");
         } else {
             tagDisplayArea.setText("File selection failed.");
         }
     }
 
+    // Action method for choosing a trap word file
     private void chooseTrapFileAction()
     {
         int returnValue = fileChooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedTrapFile = fileChooser.getSelectedFile();
-            selectedTrapFileLabel.setText("Selected trap word file: " + selectedTrapFile.getName());
+            trapFilePath = selectedTrapFile.getAbsolutePath();
+            selectedTrapFileLabel.setText(selectedTrapFile.getName());
             tagDisplayArea.setText("File successfully loaded.");
         } else {
             tagDisplayArea.setText("File selection failed.");
         }
     }
 
+    // Method to create tag frequency and display it. It calls the TagFrequency class to calculate the frequency of the tagged words.
     public void createTagFrequency() {
         try {
-        String selectedFileName = selectedFile.getAbsolutePath();
-        String filterFileName = selectedTrapFileLabel.getText().replace("Selected trap word file: ", "");
-        TagFrequency tagFrequency = new TagFrequency(selectedFileName, filterFileName);
+            if (selectedFilePath == null || trapFilePath == null) {
+                throw new RuntimeException("Both files must be selected before proceeding.");
+            }
+        TagFrequency tagFrequency = new TagFrequency(selectedFilePath, trapFilePath);
         displayTagFrequency(tagFrequency);
         } catch (Exception e) {
             tagDisplayArea.setText("Error creating tag frequency: " + e.getMessage());
         }
     }
+
+    // Method to display the tag frequency in the text area
     public void displayTagFrequency(TagFrequency tagFrequency) {
         try {
         StringBuilder tagFrequencyDisplay = new StringBuilder();
@@ -179,6 +200,7 @@ public class TagDisplayFrame extends JFrame
     }
     }
 
+    // Method to return the selected file name and trap word file name
     public String returnFileName()
     {
         return selectedFileLabel.getText() + ";" + selectedTrapFileLabel.getText();

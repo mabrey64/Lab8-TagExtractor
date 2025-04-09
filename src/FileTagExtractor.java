@@ -5,6 +5,13 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.Map;
 
+/**
+ * FileTagExtractor is the main class that serves as the entry point for the program.
+ * It initializes the GUI and handles user interactions.
+ * The program allows users to select a file and a trap word file,
+ * and then calculates and displays the frequency of tags in the selected file.
+ */
+
 public class FileTagExtractor
 {
     public static void main(String[] args)
@@ -16,8 +23,8 @@ public class FileTagExtractor
             return;
         }    else {
                 String[] Paths = filePath.split(";");
-                String selectedFilePath = Paths[0].toString().replace("Selected file: ", "").trim();
-                String filterFilePath = Paths[1].toString().replace("Selected trap word file: ", "").trim();
+                String selectedFilePath = Paths[0].trim();
+                String filterFilePath = Paths[1].trim();
 
             if (selectedFilePath.isEmpty() || filterFilePath.isEmpty()) {
                 System.out.println("Invalid file paths.");
